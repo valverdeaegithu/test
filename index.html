@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LZQ56E36NS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LZQ56E36NS');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>WEB Video Player - matcheslinks</title>
+
+  <!-- Styles & Fonts -->
+  <link rel="stylesheet" href="assets/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+  <!-- JS Libraries -->
+  <script src="https://content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+  <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
+  <script src="assets/player.js"></script>
+
+  <style>
+    body { margin: 0; font-family: 'Roboto', sans-serif; background: #000; }
+    .jwplayer { position: absolute !important; }
+    .jwplayer.jw-flag-aspect-mode { min-height: 100%; max-height: 100%; }
+
+    /* Popup Styling */
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 9998;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+      z-index: 9999;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    .popup a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #0088cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .popup button {
+      margin-top: 10px;
+      padding: 5px 15px;
+      border: none;
+      background: red;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Telegram Popup -->
+  <div class="popup-overlay" id="popupOverlay"></div>
+  <div class="popup" id="popup">
+    <h3>Join Our Telegram Channel</h3>
+    <a href="https://t.me/matcheslinks" target="_blank">Join Now</a><br>
+    <button onclick="closePopup()">Close</button>
+  </div>
+
+  <!-- JW Player Container -->
+  <div id="jwplayerDiv"></div>
+
+  <script>
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("popupOverlay").style.display = "none";
+    }
+
+    // Show popup after 2 seconds
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById("popup").style.display = "block";
+        document.getElementById("popupOverlay").style.display = "block";
+      }, 2000);
+    });
+
+    // JW Player Setup
+    fetch('https://raw.githubusercontent.com/valverdeaegithu/pl/refs/heads/main/inter.json')
+      .then(res => res.json())
+      .then(data => {
+        const dashUrl = data.source.url;
+        const keyInfo = data.drm.clearkey.keys[0];
+
+        jwplayer("jwplayerDiv").setup({
+          file: dashUrl,
+          autostart: true,
+          width: "100%",
+          height: "100%",
+          stretching: "uniform",
+          type: "dash",
+          drm: {
+            clearkey: {
+              keyId: keyInfo.keyId,
+              key: keyInfo.key
+            }
+          }
+        });
+      })
+      .catch(err => {
+        console.error("Failed to load video config:", err);
+      });
+  </script>
+
+</body>
+</html>
